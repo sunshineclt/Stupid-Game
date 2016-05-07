@@ -1,22 +1,21 @@
 %% before experiment
-global w
-global SCREEN_SIZE_INCH
-global VIEW_DISTANCE
+global w wrect SCREEN_SIZE_INCH VIEW_DISTANCE
 [w, wrect] = setUp(true);
-cellRects = ArrangeRects(4, [wrect(1), wrect(2), wrect(3) / 2, wrect(4) / 2], wrect);
+cellRects = ArrangeRects(4,...     % the 4 quadrant's coordinate
+    [wrect(1), wrect(2), wrect(3) / 2, wrect(4) / 2], wrect);
 trialSequence = mod(1:12, 4) + 1;
 Shuffle(trialSequence);
+% the distance every movement make
 distance = deg2pix(1, SCREEN_SIZE_INCH, VIEW_DISTANCE);
 
-% setup audio
+% prepare audio
 sf = 44100;
 t = 0.5;
 f = 261.6;
 tmp = linspace(0, t, sf * t);
 tone = sin(2 * pi * f * tmp);
-a = audioplayer(tone, sf);
 
-% set up react time
+% prepare react time record
 reactTime = zeros(1, 12);
 
 %% step a
@@ -24,8 +23,8 @@ DrawFormattedText(w, 'Welcome to the game!\nPress the SPACEBAR to continue', 'ce
 Screen('Flip', w);
 
 %% step b
-spaceChecker = KeyChecker('space');
-spaceChecker.waitUntilKeyboardCheck;
+spaceChecker = KeyChecker({'space', false});
+spaceChecker.keyboardCheck;
 
 try
 %%
@@ -48,31 +47,20 @@ for trial = 1:12
     fixationPoint.draw();
     Screen('Flip', w);
     startTime = GetSecs();
-    wasdChecker = MultiKeyChecker({'w', 'a', 's', 'd', 'space', 'escape'});
+    wasdChecker = KeyChecker({'w', true; 'a', true; 's', true;...
+                'd', true; 'space', false; 'escape', false;}, 0.25);
     while true
-        keyPressed = wasdChecker.keyboardCheckWithDelay(0.25);
+        keyPressed = wasdChecker.keyboardCheck();
         wasdChecker.lastHitTime = GetSecs;
         switch keyPressed
             case 1
-                fixationPoint.center.y = fixationPoint.center.y - distance;
-                if fixationPoint.center.y < 0
-                    fixationPoint.center.y = fixationPoint.center.y + wrect(4);
-                end
+                fixationPoint.center = fixationPoint.center.move(0, -distance);
             case 2
-                fixationPoint.center.x = fixationPoint.center.x - distance;
-                if fixationPoint.center.x < 0
-                    fixationPoint.center.x = fixationPoint.center.x + wrect(3);
-                end                
+                fixationPoint.center = fixationPoint.center.move(-distance, 0);
             case 3
-                fixationPoint.center.y = fixationPoint.center.y + distance;
-                if fixationPoint.center.y > wrect(4)
-                    fixationPoint.center.y = fixationPoint.center.y - wrect(4);
-                end                
+                fixationPoint.center = fixationPoint.center.move(0, +distance);
             case 4
-                fixationPoint.center.x = fixationPoint.center.x + distance;
-                if fixationPoint.center.x > wrect(3)
-                    fixationPoint.center.x = fixationPoint.center.x - wrect(3);
-                end                     
+                fixationPoint.center = fixationPoint.center.move(+distance, 0);
             case 5
                 if (oval.contains(fixationPoint.center))
                     Snd('play', tone);

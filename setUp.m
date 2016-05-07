@@ -2,9 +2,8 @@ function [ w, rect ] = setUp( isFullScreen )
 % setup app
 % @param isFullScreen is full screen mode or not
 
-global SCREEN_SIZE_INCH
+global SCREEN_SIZE_INCH VIEW_DISTANCE
 SCREEN_SIZE_INCH = 13;
-global VIEW_DISTANCE
 VIEW_DISTANCE = 60;
 InitializeMatlabOpenGL;
 if (isFullScreen)
