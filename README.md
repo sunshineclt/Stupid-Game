@@ -5,7 +5,7 @@
 
 ## 类结构
 - [Point](./Point.m)类，描述点的类
-- [Size类](./Size.m)，描述尺寸的类
+- [Size](./Size.m)类，描述尺寸的类
 - [KeyChecker](./KeyChecker.m)是可以响应多个键的KbCheck包装，并支持其中某些键的响应间隔控制
 - [FixationPoint](./FixationPoint.m)是注视点类
 - [Oval](./Oval.m)是圆类
