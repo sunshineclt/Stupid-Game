@@ -4,6 +4,6 @@ function pixs = deg2pix(degree, inch, vdist)
 % @param inch(monitor size)
 % @param vdist viewing distance(in cm)
 [width, height] = Screen('WindowSize', 0);
-screenWidth = inch * 2.54 / sqrt(1 + height / width);
+screenWidth = inch * 2.54 / sqrt(1 + (height / width)^2);
 pix = screenWidth / width;
 pixs = round(2*tan((degree/2)*pi/180) * vdist / pix);
